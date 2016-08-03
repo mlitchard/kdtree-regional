@@ -1,11 +1,22 @@
--- Tasty makes it easy to test your code. It is a test framework that can
--- combine many different types of tests into one suite. See its website for
--- help: <http://documentup.com/feuerbach/tasty>.
-import qualified Test.Tasty
--- Hspec is one of the providers for Tasty. It provides a nice syntax for
--- writing tests. Its website has more info: <https://hspec.github.io>.
-import Test.Tasty.Hspec
+import Test.Tasty
+import qualified Test.Tasty.QuickCheck as QC
+import qualified Test.Tasty.SmallCheck as SC
+import Data.List
+import Data.Ord
 
+import PropertyTests
+main = defaultMain tests
+
+tests :: TestTree
+tests = testGroup "Tests" [properties] -- add unit tests 
+
+properties :: TestTree
+properties = testGroup "KdTree Property Tests" [qcProps]
+
+qcProps = testGroup "Checked by QuickCheck"
+  [ QC.testProperty "boxAxisDistance is non-negative" $ nonNegative ]
+
+{-
 main :: IO ()
 main = do
     test <- testSpec "kdtree-regional" spec
@@ -15,3 +26,4 @@ spec :: Spec
 spec = parallel $ do
     it "is trivially true" $ do
         True `shouldBe` True
+-}
