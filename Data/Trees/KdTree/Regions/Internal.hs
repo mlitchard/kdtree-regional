@@ -31,7 +31,17 @@ type RightRange = R.Range
 -- property test distance(a, b) + distance(b, c) >= distance(a, c)
 -- distance is non-negative
 boxAxisDistance :: (BoundingBox a) => a -> a -> (a -> R.Range) -> Scalar
-boxAxisDistance = error ("boxAxisDistance incomplete")
+boxAxisDistance bbox1 bbox2 findRange
+  | min1 > max2 = (min1 - max2)
+  | min2 > max1 = (min2 - max1)
+  | otherwise     = 0 -- collision
+    where
+      min1 = R.min_point range1
+      max1 = R.max_point range1
+      min2 = R.min_point range2
+      max2 = R.max_point range2
+      range1 = findRange bbox1
+      range2 = findRange bbox2
 
 splitRange :: (BoundingBox a) =>
               (a -> R.Range)  ->
