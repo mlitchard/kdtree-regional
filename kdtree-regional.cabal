@@ -1,0 +1,87 @@
+-- This file has been generated from package.yaml by hpack version 0.13.0.
+--
+-- see: https://github.com/sol/hpack
+
+name:           kdtree-regional
+version:        0.0.0
+synopsis:       Generalized kdtree adapted to regions
+description:    Based on material from Foundations of Multidimensional and Metric Data Structures by Hanan Samet
+category:       Other
+homepage:       https://github.com/mlitchard/kdtree-regional#readme
+bug-reports:    https://github.com/mlitchard/kdtree-regional/issues
+maintainer:     Michael Litchard
+license:        MIT
+build-type:     Simple
+cabal-version:  >= 1.22
+
+extra-source-files:
+    CHANGELOG.md
+    LICENSE.md
+    package.yaml
+    README.md
+
+source-repository head
+  type: git
+  location: https://github.com/mlitchard/kdtree-regional
+
+library
+  hs-source-dirs:
+    .   
+  ghc-options: -Wall
+  build-depends:
+      base < 5
+    , AC-Vector
+    , AC-Vector-Fancy
+    , semigroups
+
+  exposed-modules:
+      Data.Trees.KdTree.Regions.Class
+      Data.Trees.KdTree.Regions.Internal
+
+  default-language: Haskell2010
+
+-- executable kdtree-regional
+--  main-is: Main.hs
+--  hs-source-dirs:
+--      executable
+--  ghc-options: -Wall -rtsopts -threaded -with-rtsopts=-N
+--  build-depends:
+--      base
+--    , kdtree-regional
+--  default-language: Haskell2010
+
+test-suite kdtree-regional-test-suite
+  type: exitcode-stdio-1.0
+  main-is: Main.hs
+  hs-source-dirs:
+      .,test-suite
+  ghc-options: -Wall -rtsopts -threaded -with-rtsopts=-N
+  build-depends:
+      base
+    , kdtree-regional
+    , tasty
+    , tasty-hspec
+    , AC-Vector
+    , AC-Vector-Fancy
+    , semigroups
+    , QuickCheck
+    , smallcheck
+    , tasty-quickcheck
+    , tasty-smallcheck
+  other-modules: 
+    Data.Trees.KdTree.Regions.Class
+    Data.Trees.KdTree.Regions.Internal
+    PropertyTests
+  default-language: Haskell2010
+
+benchmark kdtree-regional-benchmarks
+  type: exitcode-stdio-1.0
+  main-is: Main.hs
+  hs-source-dirs:
+      benchmark
+  ghc-options: -Wall -rtsopts -threaded -with-rtsopts=-N
+  build-depends:
+      base
+    , kdtree-regional
+    , criterion
+  default-language: Haskell2010
