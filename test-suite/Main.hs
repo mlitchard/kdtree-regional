@@ -11,13 +11,16 @@ tests :: TestTree
 tests = testGroup "Tests" [properties] -- add unit tests 
 
 properties :: TestTree
-properties = testGroup "KdTree Property Tests" [qcProps,scProps]
+properties = testGroup "KdTree Property Tests" [qcProps] -- ,scProps]
 
 qcProps = testGroup "Checked by QuickCheck"
-  [ QC.testProperty "boxAxisDistance is non-negative" $ nonNegative ]
+  [ QC.testProperty "positive definiteness - boxAxisDistance " $ nonNegative
+  , QC.testProperty "symmetry - boxAxisDistance" $ symmetry
+  , QC.testProperty "trianglularity - boxAxisDistance" $ triangularity
+  ]
 
 scProps = testGroup "Checked by SmallCheck"
-  [ SC.testProperty "boxAxisDistance is non-negative" $ nonNegative ]
+    [ SC.testProperty "boxAxisDistance is non-negative" $ nonNegative ]
 
 {-
 main :: IO ()
