@@ -44,11 +44,18 @@ boxAxisDistance bbox1 bbox2 findRange
       range2 = findRange bbox2
 
 splitRange :: (BoundingBox a) =>
-              (a -> R.Range)  ->
-              Scalar          ->
               a               ->
+              Scalar          ->
+              (a -> R.Range)  ->
               (LeftRange,RightRange)
-splitRange = error ("splitRange incomplete")
+splitRange node_bbox split_attrib findRange = (left_range,right_range)
+  where
+    left_range   = R.Range min_point' split_attrib
+    right_range  = R.Range split_attrib max_point'
+    min_point'   = R.min_point (findRange node_bbox)
+    max_point'   = R.max_point (findRange node_bbox)
+
+ 
 
 findDistances :: (BoundingBox b)    =>
                  (Scalar, b, a)     ->

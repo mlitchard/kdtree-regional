@@ -16,21 +16,23 @@ import Data.Trees.KdTree.Regions.KThree.KThreeTree
 import Data.Trees.KdTree.Regions.Class
 import Data.Trees.KdTree.Regions.Internal
 
+
+-- | tests for boxAxisDistance
 -- | nonNegative
 --   
 nonNegative :: ((Vect BBox3,Int),(Vect BBox3,Int)) -> Bool
 nonNegative (p,q) =
   all (>= 0) $ map (boxAxisDistance b1 b2) [rangeX,rangeY,rangeZ]
   where
-    (b1,_) = toBBox (boxInput p)
-    (b2,_) = toBBox (boxInput q)
+    (b1,_) = snd (toBBox (boxInput p))
+    (b2,_) = snd (toBBox (boxInput q))
 
 symmetry :: ((Vect BBox3,Int),(Vect BBox3,Int)) -> Bool
 symmetry (p,q) =
   notElem False $ map symmetric_test (zip dist1 dist2)
   where
-    (b1,_) = toBBox (boxInput p)
-    (b2,_) = toBBox (boxInput q)
+    (b1,_) = snd (toBBox (boxInput p))
+    (b2,_) = snd (toBBox (boxInput q))
     dist1 = map (boxAxisDistance b1 b2) [rangeX,rangeY,rangeZ]
     dist2 = map (boxAxisDistance b2 b1) [rangeX,rangeY,rangeZ]
 
@@ -38,12 +40,27 @@ triangularity :: ((Vect BBox3,Int),(Vect BBox3,Int), (Vect BBox3,Int)) -> Bool
 triangularity (p,q,r) =
   notElem False $ map triangularity_test (zip3 dist_pr dist_pq dist_qr)
   where
-     (bp,_) = toBBox (boxInput p)
-     (bq,_) = toBBox (boxInput q)
-     (br,_) = toBBox (boxInput r)
+     (bp,_) = snd (toBBox (boxInput p))
+     (bq,_) = snd (toBBox (boxInput q))
+     (br,_) = snd (toBBox (boxInput r))
      dist_pr = map (boxAxisDistance bp br) [rangeX,rangeY,rangeZ]
      dist_pq = map (boxAxisDistance bp br) [rangeX,rangeY,rangeZ]
      dist_qr = map (boxAxisDistance bq br) [rangeX,rangeY,rangeZ]
+
+------------------------
+-- | tests for splitRange
+--   
+{-
+minLeftlessThanMinRight :: [(Vect BBox3, Int)] -> Bool
+minLeftlessThanMinRight vects = undefined
+  where
+    boxes_x = map toBBox $ sortedMP (X AxisX) vects
+    -- ^ sorted by x-axis
+    boxes_y = map toBBox $ sortedMP (Y AxisY) vects
+    -- ^ sorted by y-axis
+    boxes_z = map toBBox $ sortedMP (Z AxisZ) vects
+    -- ^ sorted by z-axis
+-}
 
 symmetric_test :: (Scalar,Scalar) -> Bool
 symmetric_test (d1,d2) = d1 == d2

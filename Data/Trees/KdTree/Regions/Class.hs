@@ -40,8 +40,9 @@ class ( BoundingBox bbox) => KdTreeRegional bbox where
   type Vect bbox :: *
   type Nearest bbox a :: *
 
-  -- | toBox builds a list of BBox3 given vector and an offset
-  toBBox :: (Vect bbox,BBoxOffset,a) -> (bbox,a)
+  -- | toBox builds a list of (BBox3,(Midpoint,payload))
+  --   given (vector, offset, payload)
+  toBBox :: (Vect bbox,BBoxOffset,a) -> (Vect bbox,(bbox,a))
   -- | toList generates list of bbox/payload pairs, given a KdTree
   toList :: KdTree bbox a -> [(bbox,a)]
   -- | fromList builds KdTree given list of bboxes/payload pairs
@@ -71,9 +72,3 @@ class ( BoundingBox bbox) => KdTreeRegional bbox where
 
   findNearest :: KdTree bbox a -> bbox -> [(Scalar,bbox,a)]
 
-  sortedBoxes :: Axes bbox -> [(Vect bbox,(bbox,a))] -> [(Vect bbox,(bbox,a))]
-
-  sort_by_attrib :: Axes bbox              -> 
-                    (Vect bbox, (bbox, a)) ->
-                    (Vect bbox,(bbox,a))   ->
-                    Ordering

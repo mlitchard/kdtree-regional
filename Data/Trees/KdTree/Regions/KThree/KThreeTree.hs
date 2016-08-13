@@ -17,6 +17,7 @@ module Data.Trees.KdTree.Regions.KThree.KThreeTree
   , KdTree         (..)
   , Leaf           (..)
   , Axes           (..)
+  , sortedBoxes       
   )  where
 
 import Data.Maybe
@@ -44,10 +45,29 @@ leafSize = 18
 instance KdTreeRegional BBox3 where
 
   type Vect BBox3 = Vector3
+  data Axes BBox3 = X AxisX | Y AxisY | Z AxisZ deriving Show
 
-  toBBox :: (Vect BBox3,BBoxOffset,a) -> (BBox3,a)
-  toBBox ((Vector3 x y z),offset,a) = (bbox3,a) 
+  toBBox :: (Vect BBox3,BBoxOffset,a) -> (Vect BBox3,(BBox3,a))
+  toBBox (mp@(Vector3 x y z),offset,a) = (mp,(bbox3,a)) 
     where
       bbox3 = bound_corners nwu sed
       nwu   = Vector3 (x - offset) (y + offset) (z + offset)
       sed   = Vector3 (x + offset) (y - offset) (z - offset)
+
+-- | sortedMP sorts by midpoints based on Axis
+sortedBoxes :: Axes BBox3               ->
+               [(Vect BBox3,(BBox3,a))] ->
+               [(Vect BBox3,(BBox3,a))]
+sortedBoxes axis boxes = L.sortBy (sort_by_attrib axis) boxes
+
+sort_by_attrib :: Axes BBox3             ->
+                  (Vect BBox3,(BBox3,a)) ->
+                  (Vect BBox3,(BBox3,a)) ->
+                  Ordering
+sort_by_attrib axis p q =
+  (attrib_value axis (fst p)) `compare` (attrib_value axis (fst q))
+
+attrib_value :: Axes BBox3 -> Vect BBox3 -> Scalar
+attrib_value (X AxisX) vect = get_coord AxisX vect
+attrib_value (Y AxisY) vect = get_coord AxisY vect
+attrib_value (Z AxisZ) vect = get_coord AxisZ vect
