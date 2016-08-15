@@ -17,6 +17,7 @@ qcProps = testGroup "Checked by QuickCheck"
   [ QC.testProperty "positive definiteness - boxAxisDistance " $ nonNegative
   , QC.testProperty "symmetry - boxAxisDistance" $ symmetry
   , QC.testProperty "trianglularity - boxAxisDistance" $ triangularity
+  , QC.testProperty "ranging - splitRange" $ minLeftlessThanMinRight
   ]
 
 scProps = testGroup "Checked by SmallCheck"

@@ -17,7 +17,9 @@ module Data.Trees.KdTree.Regions.KThree.KThreeTree
   , KdTree         (..)
   , Leaf           (..)
   , Axes           (..)
-  , sortedBoxes       
+  , sortedBoxes
+  , split
+  , medianIndex 
   )  where
 
 import Data.Maybe
@@ -66,6 +68,12 @@ sort_by_attrib :: Axes BBox3             ->
                   Ordering
 sort_by_attrib axis p q =
   (attrib_value axis (fst p)) `compare` (attrib_value axis (fst q))
+
+split :: [(Vect BBox3,(BBox3,a))] -> Int -> (Vect BBox3,(BBox3,a))
+split sorted median_index = sorted !! median_index
+
+medianIndex :: [(Vect BBox3,(BBox3,a))] -> Int
+medianIndex sorted = (length sorted) `div` 2
 
 attrib_value :: Axes BBox3 -> Vect BBox3 -> Scalar
 attrib_value (X AxisX) vect = get_coord AxisX vect

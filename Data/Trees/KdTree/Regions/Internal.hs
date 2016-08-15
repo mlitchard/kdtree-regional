@@ -44,11 +44,11 @@ boxAxisDistance bbox1 bbox2 findRange
       range2 = findRange bbox2
 
 splitRange :: (BoundingBox a) =>
-              a               ->
-              Scalar          ->
               (a -> R.Range)  ->
+              Scalar          ->
+              a               ->
               (LeftRange,RightRange)
-splitRange node_bbox split_attrib findRange = (left_range,right_range)
+splitRange findRange split_attrib node_bbox =  (left_range,right_range)
   where
     left_range   = R.Range min_point' split_attrib
     right_range  = R.Range split_attrib max_point'
