@@ -19,10 +19,6 @@ extra-source-files:
     LICENSE.md
     package.yaml
     README.md
---
--- source-repository head
---   type: git
---  location: https://github.com/mlitchard/kdtree-regional
 
 library
   hs-source-dirs:
