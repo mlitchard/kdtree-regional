@@ -19,7 +19,8 @@ module Data.Trees.KdTree.Regions.KThree.KThreeTree
   , Axes           (..)
   , sortedBoxes
   , split
-  , medianIndex 
+  , medianIndex
+  , splitBox
   )  where
 
 import Data.Maybe
@@ -60,22 +61,39 @@ instance KdTreeRegional BBox3 where
 sortedBoxes :: Axes BBox3               ->
                [(Vect BBox3,(BBox3,a))] ->
                [(Vect BBox3,(BBox3,a))]
-sortedBoxes axis boxes = L.sortBy (sort_by_attrib axis) boxes
+sortedBoxes axis = L.sortBy (sortByAttrib axis)
 
-sort_by_attrib :: Axes BBox3             ->
+sortByAttrib :: Axes BBox3             ->
                   (Vect BBox3,(BBox3,a)) ->
                   (Vect BBox3,(BBox3,a)) ->
                   Ordering
-sort_by_attrib axis p q =
-  (attrib_value axis (fst p)) `compare` (attrib_value axis (fst q))
+sortByAttrib axis p q =
+  attribValue axis (fst p) `compare` attribValue axis (fst q)
 
-split :: [(Vect BBox3,(BBox3,a))] -> Int -> (Vect BBox3,(BBox3,a))
-split sorted median_index = sorted !! median_index
+split :: [(Vect BBox3,(BBox3,a))] -> Int -> Vect BBox3
+split sorted median_index = fst (sorted !! median_index)
 
 medianIndex :: [(Vect BBox3,(BBox3,a))] -> Int
-medianIndex sorted = (length sorted) `div` 2
+medianIndex sorted = length sorted `div` 2
 
-attrib_value :: Axes BBox3 -> Vect BBox3 -> Scalar
-attrib_value (X AxisX) vect = get_coord AxisX vect
-attrib_value (Y AxisY) vect = get_coord AxisY vect
-attrib_value (Z AxisZ) vect = get_coord AxisZ vect
+attribValue :: Axes BBox3 -> Vect BBox3 -> Scalar
+attribValue (X AxisX) vect = get_coord AxisX vect
+attribValue (Y AxisY) vect = get_coord AxisY vect
+attribValue (Z AxisZ) vect = get_coord AxisZ vect
+
+splitBox :: Vect BBox3 -> Axes BBox3 -> BBox3 -> (BBox3, BBox3)
+splitBox split' (X AxisX) node_bbox = (xbox_left, xbox_right)
+  where
+    xbox_left  = rangeXYZ leftx_range (rangeY node_bbox) (rangeZ node_bbox)
+    xbox_right = rangeXYZ rightx_range (rangeY node_bbox) (rangeZ node_bbox)
+    (leftx_range, rightx_range)  = splitRange rangeX (v3x split') node_bbox
+splitBox split' (Y AxisY) node_bbox = (ybox_left, ybox_right)
+  where
+    ybox_left  = rangeXYZ (rangeX node_bbox) lefty_range (rangeZ node_bbox)
+    ybox_right = rangeXYZ (rangeX node_bbox) righty_range (rangeZ node_bbox)
+    (lefty_range, righty_range) = splitRange rangeY (v3y split') node_bbox
+splitBox split' (Z AxisZ) node_bbox = (zbox_left, zbox_right)
+  where
+    zbox_left  = rangeXYZ (rangeX node_bbox) (rangeY node_bbox) leftz_range
+    zbox_right = rangeXYZ (rangeX node_bbox) (rangeY node_bbox) rightz_range
+    (leftz_range, rightz_range) = splitRange rangeZ (v3z split') node_bbox

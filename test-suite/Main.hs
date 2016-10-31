@@ -4,7 +4,8 @@ import qualified Test.Tasty.SmallCheck as SC
 import Data.List
 import Data.Ord
 
-import PropertyTests
+import BoxAxisDistance
+import SplitRange
 main = defaultMain tests
 
 tests :: TestTree
@@ -14,10 +15,10 @@ properties :: TestTree
 properties = testGroup "KdTree Property Tests" [qcProps] -- ,scProps]
 
 qcProps = testGroup "Checked by QuickCheck"
-  [ QC.testProperty "positive definiteness - boxAxisDistance " $ nonNegative
-  , QC.testProperty "symmetry - boxAxisDistance" $ symmetry
-  , QC.testProperty "trianglularity - boxAxisDistance" $ triangularity
-  , QC.testProperty "ranging - splitRange" $ minLeftlessThanMinRight
+  [ QC.testProperty "positive definiteness - boxAxisDistance " nonNegative
+  , QC.testProperty "symmetry - boxAxisDistance" symmetry
+  , QC.testProperty "trianglularity - boxAxisDistance" triangularity
+  , QC.testProperty "min/max splitRange test" minMaxSplitRange
   ]
 
 scProps = testGroup "Checked by SmallCheck"

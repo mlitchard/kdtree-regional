@@ -23,7 +23,6 @@ import           Data.Vector.Class
 import           Data.BoundingBox
 import qualified Data.BoundingBox.Range as R
 
-type BBoxOffset = Scalar
 data Branch = BLeft | BRight deriving Show
 type LeftRange  = R.Range
 type RightRange = R.Range
@@ -32,8 +31,8 @@ type RightRange = R.Range
 -- distance is non-negative
 boxAxisDistance :: (BoundingBox a) => a -> a -> (a -> R.Range) -> Scalar
 boxAxisDistance bbox1 bbox2 findRange
-  | min1 > max2 = (min1 - max2)
-  | min2 > max1 = (min2 - max1)
+  | min1 > max2 = min1 - max2
+  | min2 > max1 = min2 - max1
   | otherwise     = 0 -- collision
     where
       min1 = R.min_point range1
@@ -60,13 +59,13 @@ splitRange findRange split_attrib node_bbox =  (left_range,right_range)
 findDistances :: (BoundingBox b)    =>
                  (Scalar, b, a)     ->
                  Either (b,a) (Scalar,b,a)
-findDistances = error ("findDistances incomplete")
+findDistances = error "findDistances incomplete"
 
 evalBox :: (BoundingBox a) => (a -> R.Range) -> a -> Scalar -> Bool
-evalBox = error ("evalBox incomplete")
+evalBox = error "evalBox incomplete"
 
 -- | filterCandidates
 filterCandidates :: (BoundingBox b) => [(Scalar,b,a)] -> [(Scalar,b,a)]
-filterCandidates = error ("filterCandidates incomplete")
+filterCandidates = error "filterCandidates incomplete"
 
-distance (d1,_,_) (d2,_,_) = error ("distance incomplete")
+distance (d1,_,_) (d2,_,_) = error "distance incomplete"

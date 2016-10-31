@@ -37,6 +37,7 @@ library
   exposed-modules:
       Data.Trees.KdTree.Regions.Class
       Data.Trees.KdTree.Regions.Internal
+      Data.Trees.KdTree.Regions.KThree.KThreeTree
 
   default-language: Haskell2010
 
@@ -58,10 +59,15 @@ test-suite kdtree-regional-test-suite
     , smallcheck
     , tasty-quickcheck
     , tasty-smallcheck
+    , random == 1.1
+    , random-shuffle
   other-modules: 
     Data.Trees.KdTree.Regions.Class
     Data.Trees.KdTree.Regions.Internal
-    PropertyTests
+    Data.Trees.KdTree.Regions.KThree.KThreeTree
+    BoxAxisDistance
+    SplitRange
+    Utilities
   default-language: Haskell2010
 
 benchmark kdtree-regional-benchmarks
